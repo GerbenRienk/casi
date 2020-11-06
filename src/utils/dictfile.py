@@ -4,7 +4,7 @@ Comments are preceded with a #
 Empty lines are ignored
 Error handling for lines with more than 2 splits should be implemented
 All files should be placed in folder "config"
-@author: GerbenRienk
+@author: Gerben Rienk
 '''
 
 if __name__ == '__main__':

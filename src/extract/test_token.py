@@ -14,9 +14,8 @@ def get_an_access_token():
     
     # start with requesting an access token, which we can use for about an hour
     api = CastorApi(config)
-    access_token_request = api.sessions.get_access_token(verbose=True)
-    print(access_token_request)
-    print(api.access_token)
+    api.sessions.get_access_token(verbose=True)
+    print('the access-token is: %s' % api.access_token)
     
 if __name__ == '__main__':
     get_an_access_token()
