@@ -4,9 +4,22 @@ import json
 class CastorApi(object):
 
     def __init__(self, config):
-        self.url = config['api_url']
-        self.client_id = config['client_id']
-        self.client_secret = config['client_secret']
+        '''
+        Takes a config-dictionary as parameter. To create an object of this class 
+        the dictionary should at least have Values for Keys api_url, client_id and client_secret
+        '''
+        # default to zero length strings
+        self.url = 'https://api_url.in.config'
+        self.client_id = ''
+        self.client_secret = ''
+        
+        try:
+            self.url = config['api_url']
+            self.client_id = config['client_id']
+            self.client_secret = config['client_secret']
+        except Exception as _error:
+            print(_error)
+            
         self.headers = {"content-type": "application/x-www-form-urlencoded"}
         self.access_token = 'x'
         
@@ -78,21 +91,17 @@ class _Sessions(object):
     def get_access_token(self, verbose=False):
         """
         Get an access token for all subsequent API calls.
-
-        Parameters
-        :param client_id: castor specs: see https://helpdesk.castoredc.com/article/124-application-programming-interface-api
-        :type client_id: String
-        :param client_secret: castor specs, see above
-        :type client_secret: String
-        
         """
         token_url = self.api.url + "/oauth/token"
         token_data = "grant_type=client_credentials&client_id=%s&client_secret=%s" % (self.api.client_id, self.api.client_secret)
         response = self.api.utils.request(data=token_data, request_type='post', url=token_url, verbose=verbose)
-        # set the auth-token only if the response status was 200
-        if response.status_code == 200:
-            resp_json =json.loads(response.text)
-            self.api.access_token = resp_json['access_token']
+        
+        # did we get anything from our request
+        if response is not None:
+            # set the auth-token only if the response status was 200
+            if response.status_code == 200:
+                resp_json =json.loads(response.text)
+                self.api.access_token = resp_json['access_token']
         
         return response
 

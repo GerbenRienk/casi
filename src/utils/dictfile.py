@@ -10,21 +10,38 @@ All files should be placed in folder "config"
 if __name__ == '__main__':
     pass
 
-def readDictFile(dictFileName, rel_path='../'):
-        """
-        Rel_path is the relative path to folder config;
-        by default it is assumed that folder config is a child of the current folder,
-        but this can be specified if otherwise. 
-        """
-        myDict = {}
+class DictFile(object):
+    '''
+    Reads the contents of a file and returns a dictionary.
+    Parameters are the file-name, required, and the relative path,
+    which is not required and defaults to ../config/
+    '''
+    def __init__(self, file_name, rel_path='../config/'):
+        self.file_name = file_name
+        self.rel_path = rel_path
+    
+    def read(self):
+        '''
+        Reads all lines from the file and stores the info in a dictionary.
+        Key and Value should be separated by a space.
+        Lines starting with a # are considered comments.
+        '''
+        # start with an empty dictionary
+        _my_dict = {}
         # read the file from disk
-        with open(rel_path + 'config/' + dictFileName) as f:
-            for line in f:
-                # comment lines start with a #
-                if line[0] != "#":
-                    # only look at lines we can process
-                    if len(line.split()) == 2:
-                        (key, val) = line.split()
-                        myDict[key] = val
+        try:
+            with open(self.rel_path + self.file_name) as f:
+                for line in f:
+                    # comment lines start with a #
+                    if line[0] != "#":
+                        # only look at lines we can process
+                        if len(line.split()) == 2:
+                            (key, val) = line.split()
+                            _my_dict[key] = val
+        
+        except Exception as _error:
+            print('something went wrong when trying to open %s' % self.rel_path + self.file_name)
+            print(_error)
                     
-        return myDict 
+        return _my_dict 
+
