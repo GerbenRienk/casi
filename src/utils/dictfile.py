@@ -10,7 +10,7 @@ All files should be placed in folder "config"
 if __name__ == '__main__':
     pass
 
-def readDictFile(dictFileName, rel_path=''):
+def readDictFile(dictFileName, rel_path='../'):
         """
         Rel_path is the relative path to folder config;
         by default it is assumed that folder config is a child of the current folder,

@@ -1,37 +1,38 @@
 '''
-Copied on 17 Oct 2019
-from /utils/oli_test.py
-@author: GerbenRienk
+Created on 3 nov. 2020
+@author: Gerben Rienk
+The purpose of this module is to try to send a request to the castor-api
+and display the access_token which is a requirement 
 '''
-import time
-import datetime
-from utils.logmailer import MailThisLogFile
+#import time
+#import datetime
+#from utils.logmailer import MailThisLogFile
 from utils.dictfile import readDictFile
 from utils.castor_api import CastorApi
-from utils.pg_api import ConnToOliDB, PGSubject
-from utils.reporter import Reporter
-#from _operator import itemgetter
-
-access_token = "x"
+#from utils.pg_api import ConnToOliDB, PGSubject
+#from utils.reporter import Reporter
 
 def cycle_through_syncs():
-    # indicate that we are going to use access_token globally
-    global access_token
     # read configuration file for client id and client secret and other parameters
-    config=readDictFile('alltogether.config')
+    config=readDictFile('casi.config')
+    
     # start a report
-    my_report = Reporter()
+    #my_report = Reporter()
     
     # start with requesting an access token, which we can use for about an hour
-    api = CastorApi(config['ApiUrl'])
-    access_token_request = api.sessions.get_access_token(config['client_id'], config['client_secret'])
-    access_token = access_token_request.get('access_token')
-    # print('access token before loops %s' % access_token)            
+    api = CastorApi(config)
+    access_token_request = api.sessions.get_access_token(verbose=True)
+    print(access_token_request)
+    print(api.access_token)
+    user_list = api.users.list(verbose=True)
+    print(user_list)
+              
+    '''
     if(access_token is None):
         # something is wrong with either the url, the client id or the client secret 
         my_report.append_to_report('could not get a access token with given client id and secret')
     else:
-        # apparenty we have a token, so let's start looping    
+        # apparently we have a token, so let's start looping    
         start_time = datetime.datetime.now()
         my_report.append_to_report('cycle started at ' + str(start_time))
     
@@ -60,7 +61,8 @@ def cycle_through_syncs():
 
     my_report.close_file()
     # MailThisLogFile('logs/report.txt')
-
+    '''
+    
 def update_token(api, config):
     global access_token
     # use endpoint user to check if the access token is still valid and if not
