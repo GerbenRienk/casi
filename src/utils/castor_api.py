@@ -25,6 +25,7 @@ class CastorApi(object):
         
         self.utils = _Utils(self)
         self.sessions = _Sessions(self)
+        self.studies = _Studies(self)
         self.users = _Users(self)
 
 class _Utils(object):
@@ -56,10 +57,10 @@ class _Utils(object):
         # by default return nothing
         return_value = None
         if verbose == True:
-            print("p url=     %s   " % url)
-            print("p headers= %s   " % headers)
-            print("p data=    %s   " % data)
-            print("p type=    %s \n" % request_type)
+            print("pre url=     %s   " % url)
+            print("pre headers= %s   " % headers)
+            print("pre data=    %s   " % data)
+            print("pre type=    %s \n" % request_type)
 
         try:
             if request_type == 'post':
@@ -98,12 +99,39 @@ class _Sessions(object):
         
         # did we get anything from our request
         if response is not None:
-            # set the auth-token only if the response status was 200
+            # set the access_token only if the response status was 200
             if response.status_code == 200:
                 resp_json =json.loads(response.text)
                 self.api.access_token = resp_json['access_token']
         
         return response
+
+class _Studies(object):
+    '''
+    endpoint called study, but containing information about all studies in castor
+    '''
+    def __init__(self, castor_api):
+        self.api = castor_api
+
+    def list(self, verbose=False, complete_output=False):
+        """
+        Get all studies in json for the current user 
+        Set verbose=True to get the complete request plus response
+        Set complete_output=True to get the complete response; if set to False
+        you will skip the nodes ['_embedded']['study']
+        """
+        my_url = self.api.url + "/api/study"    
+        my_authorization = "Bearer %s" % (self.api.access_token)
+        my_headers = {'Authorization': my_authorization}
+        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
+        if response is not None:
+            if response.status_code == 200:
+                if complete_output:
+                    resp_json = json.loads(response.text)
+                else:
+                    resp_json = json.loads(response.text)['_embedded']['study']
+        
+        return resp_json
 
 class _Users(object):
 
