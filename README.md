@@ -10,6 +10,6 @@ and at [https://helpdesk.castoredc.com/article/124-application-programming-inter
 
 ## requirements
 - Install python 3.x
-- Install with pip requests
+- Install with pip: requests
 
 The code was tested against castor 2020.2.20 
