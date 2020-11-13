@@ -8,4 +8,8 @@ The url won't need any changing, but we must supply the client-id and the client
 This is described at [https://data.castoredc.com/api](https://data.castoredc.com/api)
 and at [https://helpdesk.castoredc.com/article/124-application-programming-interface-api](https://helpdesk.castoredc.com/article/124-application-programming-interface-api)
 
+## requirements
+- Install python 3.x
+- Install with pip requests
+
 The code was tested against castor 2020.2.20 
