@@ -3,6 +3,7 @@ scriptlet to list all studies we have access to and export them into a csv-file
 
 @author: TrialDataSolutions
 Created on 16 Nov 2020
+Copyright 2020 TrialDataSolutions
 '''
 from utils.dictfile import DictFile
 from utils.castor_api import CastorApi

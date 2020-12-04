@@ -2,6 +2,7 @@
 Created on 9 mei 2017
 
 @author: GerbenRienk
+Copyright 2020 TrialDataSolutions
 '''
 import os
 

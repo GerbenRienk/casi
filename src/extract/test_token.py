@@ -5,7 +5,7 @@ This access_token is a requirement for all further interaction with the api.
 
 Created on 3 nov. 2020
 @author: TrialDataSolutions
-
+Copyright 2020 TrialDataSolutions
 '''
 from utils.dictfile import DictFile
 from utils.castor_api import CastorApi

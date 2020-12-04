@@ -2,6 +2,7 @@
 Created on 11 apr. 2017
 
 @author: GerbenRienk
+Copyright 2020 TrialDataSolutions
 '''
 
 
