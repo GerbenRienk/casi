@@ -7,14 +7,14 @@ and display the access_token which is a requirement
 #import time
 #import datetime
 #from utils.logmailer import MailThisLogFile
-from utils.dictfile import readDictFile
+from utils.dictfile import DictFile
 from utils.castor_api import CastorApi
 #from utils.pg_api import ConnToOliDB, PGSubject
 #from utils.reporter import Reporter
 
 def cycle_through_syncs():
     # read configuration file for client id and client secret and other parameters
-    config=readDictFile('casi.config')
+    config=DictFile('casi.config').read()
     
     # start a report
     #my_report = Reporter()
