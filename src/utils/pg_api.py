@@ -4,6 +4,7 @@ Read subjects and write subjects
 Created on 14 apr. 2017
 
 @author: GerbenRienk
+Copyright 2020 TrialDataSolutions
 '''
 import psycopg2
 from utils.dictfile import readDictFile

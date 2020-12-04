@@ -1,5 +1,9 @@
+"""
+Copyright 2020 TrialDataSolutions
+"""
 import requests
 import json
+import copy
 
 class CastorApi(object):
 
@@ -26,6 +30,7 @@ class CastorApi(object):
         self.utils = _Utils(self)
         self.sessions = _Sessions(self)
         self.studies = _Studies(self)
+        self.records = _Records(self)
         self.users = _Users(self)
 
 class _Utils(object):
@@ -132,6 +137,44 @@ class _Studies(object):
                     resp_json = json.loads(response.text)['_embedded']['study']
         
         return resp_json
+
+class _Records(object):
+    '''
+    endpoint called record, but containing information about all records in a study
+    '''
+    def __init__(self, castor_api):
+        self.api = castor_api
+        
+
+    def list(self, study_id, verbose=False):
+        """
+        Get all records in json for the study with this study_id
+        Set verbose=True to get the complete request plus response
+        """
+        my_url = self.api.url + "/api/study/" + study_id + "/record"
+        my_authorization = "Bearer %s" % (self.api.access_token)
+        my_headers = {'Authorization': my_authorization}
+        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
+        return_data = {'records': []}
+        if response is not None:
+            if response.status_code == 200:
+                finished_looping = False
+                while not finished_looping:
+                    resp_json = json.loads(response.text)
+                    for one_record in resp_json['_embedded']['records']:
+                        return_data['records'].append(one_record)
+                    
+                    # first we must check if this page is the same as the last page
+                    if resp_json['_links']['self']['href']==resp_json['_links']['last']['href']:
+                        # we're done, so stop looping
+                        finished_looping = True
+                    else:
+                        # go to the next url
+                        my_url = resp_json['_links']['next']['href']
+                        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
+                
+                
+        return return_data
 
 class _Users(object):
 
