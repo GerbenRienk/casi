@@ -3,7 +3,6 @@ Copyright 2020 TrialDataSolutions
 """
 import requests
 import json
-import copy
 
 class CastorApi(object):
 
@@ -164,14 +163,18 @@ class _Records(object):
                     for one_record in resp_json['_embedded']['records']:
                         return_data['records'].append(one_record)
                     
-                    # first we must check if this page is the same as the last page
-                    if resp_json['_links']['self']['href']==resp_json['_links']['last']['href']:
-                        # we're done, so stop looping
+                    # if the page count > 0 then go to the next page
+                    if resp_json['page_count'] == 0:
                         finished_looping = True
                     else:
-                        # go to the next url
-                        my_url = resp_json['_links']['next']['href']
-                        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
+                        # first we must check if this page is the same as the last page
+                        if resp_json['_links']['self']['href']==resp_json['_links']['last']['href']:
+                            # we're done, so stop looping
+                            finished_looping = True
+                        else:
+                            # go to the next url
+                            my_url = resp_json['_links']['next']['href']
+                            response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
                 
                 
         return return_data
