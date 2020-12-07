@@ -1,0 +1,22 @@
+{
+	"configs": [{
+		"config_name": "casi.config",
+		"studies": [{
+				"study_id": "2A72D9CC-06B5-0078-B089-A5456C7A7024"
+			},
+			{
+				"study_id": "86A2719F-AA11-414F-BDF3-5A54FBE60F0F"
+			}
+		]
+	}, {
+		"config_name": "casi2.config",
+		"studies": [{
+				"study_id": "11EB9FEC-5D67-9B70-73A0-1895014264E1"
+			},
+			{
+				"study_id": "B61FC64D-4770-33E5-0EEE-1BE81927D175"
+			}
+		]
+	}]
+
+}
