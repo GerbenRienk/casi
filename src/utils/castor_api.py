@@ -29,6 +29,7 @@ class CastorApi(object):
         self.utils = _Utils(self)
         self.sessions = _Sessions(self)
         self.studies = _Studies(self)
+        self.study = _Study(self)
         self.records = _Records(self)
         self.users = _Users(self)
 
@@ -88,55 +89,6 @@ class _Utils(object):
             
         return return_value
 
-class _Sessions(object):
-
-    def __init__(self, castor_api):
-        self.api = castor_api
-
-    def get_access_token(self, verbose=False):
-        """
-        Get an access token for all subsequent API calls.
-        """
-        token_url = self.api.url + "/oauth/token"
-        token_data = "grant_type=client_credentials&client_id=%s&client_secret=%s" % (self.api.client_id, self.api.client_secret)
-        response = self.api.utils.request(data=token_data, request_type='post', url=token_url, verbose=verbose)
-        
-        # did we get anything from our request
-        if response is not None:
-            # set the access_token only if the response status was 200
-            if response.status_code == 200:
-                resp_json =json.loads(response.text)
-                self.api.access_token = resp_json['access_token']
-        
-        return response
-
-class _Studies(object):
-    '''
-    endpoint called study, but containing information about all studies in castor
-    '''
-    def __init__(self, castor_api):
-        self.api = castor_api
-
-    def list(self, verbose=False, complete_output=False):
-        """
-        Get all studies in json for the current user 
-        Set verbose=True to get the complete request plus response
-        Set complete_output=True to get the complete response; if set to False
-        you will skip the nodes ['_embedded']['study']
-        """
-        my_url = self.api.url + "/api/study"    
-        my_authorization = "Bearer %s" % (self.api.access_token)
-        my_headers = {'Authorization': my_authorization}
-        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
-        if response is not None:
-            if response.status_code == 200:
-                if complete_output:
-                    resp_json = json.loads(response.text)
-                else:
-                    resp_json = json.loads(response.text)['_embedded']['study']
-        
-        return resp_json
-
 class _Records(object):
     '''
     endpoint called record, but containing information about all records in a study
@@ -178,6 +130,82 @@ class _Records(object):
                 
                 
         return return_data
+    
+class _Sessions(object):
+
+    def __init__(self, castor_api):
+        self.api = castor_api
+
+    def get_access_token(self, verbose=False):
+        """
+        Get an access token for all subsequent API calls.
+        """
+        token_url = self.api.url + "/oauth/token"
+        token_data = "grant_type=client_credentials&client_id=%s&client_secret=%s" % (self.api.client_id, self.api.client_secret)
+        response = self.api.utils.request(data=token_data, request_type='post', url=token_url, verbose=verbose)
+        
+        # did we get anything from our request
+        if response is not None:
+            # set the access_token only if the response status was 200
+            if response.status_code == 200:
+                resp_json =json.loads(response.text)
+                self.api.access_token = resp_json['access_token']
+        
+        return response
+
+class _Study(object):
+    '''
+    endpoint called study, but containing information about all studies in castor
+    '''
+    def __init__(self, castor_api):
+        self.api = castor_api
+
+    def list(self, study_id, verbose=False):
+        """
+        Get all studies in json for the current user 
+        Set verbose=True to get the complete request plus response
+        Set complete_output=True to get the complete response; if set to False
+        you will skip the nodes ['_embedded']['study']
+        """
+        my_url = self.api.url + "/api/study/" + study_id  
+        my_authorization = "Bearer %s" % (self.api.access_token)
+        my_headers = {'Authorization': my_authorization}
+        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
+        resp_json = {}
+        if response is not None:
+            if response.status_code == 200:
+                resp_json = json.loads(response.text)
+                
+        
+        return resp_json
+class _Studies(object):
+    '''
+    endpoint called study, but containing information about all studies in castor
+    '''
+    def __init__(self, castor_api):
+        self.api = castor_api
+
+    def list(self, verbose=False, complete_output=False):
+        """
+        Get all studies in json for the current user 
+        Set verbose=True to get the complete request plus response
+        Set complete_output=True to get the complete response; if set to False
+        you will skip the nodes ['_embedded']['study']
+        """
+        my_url = self.api.url + "/api/study"    
+        my_authorization = "Bearer %s" % (self.api.access_token)
+        my_headers = {'Authorization': my_authorization}
+        response = self.api.utils.request(request_type='get', headers=my_headers, url=my_url, data=None, verbose=verbose)
+        if response is not None:
+            if response.status_code == 200:
+                if complete_output:
+                    resp_json = json.loads(response.text)
+                else:
+                    resp_json = json.loads(response.text)['_embedded']['study']
+        
+        return resp_json
+
+
 
 class _Users(object):
 
